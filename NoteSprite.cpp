@@ -18,9 +18,6 @@ const int radius = 15;
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
-void makeCircle(int x, int y) {
-	tft.fillCircle(x,y,radius,0xffff);
-}
 
 void update (int dt) {
 	
