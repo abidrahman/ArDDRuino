@@ -10,6 +10,11 @@
 #include <SD.h>
 #include "lcd_image.h"
 
+#include "State.h"
+#include "MenuState.h"
+#include "PlayState.h"
+#include "ScoreState.h"
+
 // standard U of A library settings, assuming Atmel Mega SPI pins
 #define SD_CS    5  // Chip select line for SD card
 #define TFT_CS   6  // Chip select line for TFT display
@@ -22,6 +27,7 @@
 #define SEL      9  // digital input
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+Sd2Card card;
 
 void initialization() {
     init();
@@ -56,8 +62,8 @@ int main() {
     
     initialization();
     
-    typedef enum {MenuState, PlayState, ScoreState} GameState;
-    GameState = MenuState;
+    typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
+    GameState state = MENUSTATE;
     
     MenuState menuState;
     PlayState playState;
@@ -72,20 +78,21 @@ int main() {
         dt = currentTime - time;
         time = currentTime;
         
-        if (MenuState) {
+        if (state == MENUSTATE) {
             menuState.update(dt);
             menuState.render();
         }
 
-        if (PlayState) {
+        if (state == PLAYSTATE) {
             playState.update(dt);
             playState.render();
         }
 
-        if (ScoreState) {
+        if (state == SCORESTATE) {
             scoreState.update(dt);
             scoreState.render();
         }
+    }
     
     return 0;
 }

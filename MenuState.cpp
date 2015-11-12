@@ -7,3 +7,13 @@
 //
 
 #include "MenuState.h"
+
+void MenuState::update(unsigned long dt) {
+    
+    
+}
+
+void MenuState::render() {
+    
+    
+}
