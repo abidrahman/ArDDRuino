@@ -68,7 +68,7 @@ int main() {
     initialization();
     
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
-    GameState state = MENUSTATE;
+    GameState state = PLAYSTATE;
     
     
     unsigned long time = micros();

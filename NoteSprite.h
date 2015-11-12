@@ -13,6 +13,7 @@ class NoteSprite
 	
 	void update (unsigned long dt);
 	void render ();
+	const int RADIUS = 15;
 	int x;
 	int y;
 	int vy;
