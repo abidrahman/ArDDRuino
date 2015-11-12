@@ -22,5 +22,5 @@ void renderPlayState() {
 }
 
 void makeCircle(int x, int y) {
-	tft.fillCircle(x,y,NoteSprite.radius,0xffff);
+	tft.fillCircle(x,y,NoteSprite.RADIUS,0xffff);
 }
