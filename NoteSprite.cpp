@@ -22,19 +22,6 @@ void makeCircle(int x, int y) {
 	tft.fillCircle(x,y,radius,0xffff);
 }
 
-
-void render () {
-	NoteSprite circle1;
-	circle1.makeCircle(radius + 1, y1);
-	NoteSprite circle2;
-	circle2.makeCircle(radius*3 + 3, y2);
-	NoteSprite circle3;
-	circle3.makeCircle(radius*5 + 5, y3);
-	NoteSprite circle4;
-	circle4.makeCircle(radius*7 + 7, y4);
-
-}
-
 void update (int dt) {
 	
 }

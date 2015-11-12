@@ -3,14 +3,10 @@
 
 #include "State.h"
 
-class MenuState : State {
+class MenuState : public State {
 public:
     void update(unsigned long dt);
     void render();
 };
-
-
-
-
 
 #endif /* defined(____MenuState__) */

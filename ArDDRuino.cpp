@@ -65,9 +65,9 @@ int main() {
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
     GameState state = MENUSTATE;
     
-    MenuState menuState;
-    PlayState playState;
-    ScoreState scoreState;
+    MenuState menuState(tft);
+    PlayState playState(tft);
+    ScoreState scoreState(tft);
     
     unsigned long time = micros();
     unsigned long dt; //change in time from previous loop

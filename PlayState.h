@@ -9,7 +9,9 @@
 #ifndef ____PlayState__
 #define ____PlayState__
 
-class PlayState : State {
+#include "State.h"
+
+class PlayState : public State {
 public:
     void update(unsigned long dt);
     void render();

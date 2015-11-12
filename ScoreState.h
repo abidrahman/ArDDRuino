@@ -11,9 +11,8 @@
 
 #include "State.h"
 
-class ScoreState : State {
+class ScoreState : public State {
 public:
-    ScoreState();
     void update(unsigned long dt);
     void render();
 };
