@@ -27,11 +27,11 @@ void render () {
 	NoteSprite circle1;
 	circle1.makeCircle(radius + 1, y1);
 	NoteSprite circle2;
-	circle2.makeCircle(radius*2 + 3, y2);
+	circle2.makeCircle(radius*3 + 3, y2);
 	NoteSprite circle3;
-	circle3.makeCircle(radius*4 + 5, y3);
+	circle3.makeCircle(radius*5 + 5, y3);
 	NoteSprite circle4;
-	circle4.makeCircle(radius*6 + 7, y4);
+	circle4.makeCircle(radius*7 + 7, y4);
 
 }
 
