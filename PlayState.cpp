@@ -13,7 +13,7 @@ void updatePlayState(unsigned long dt) {
     
 }
 
-void renderPlayState() {
+void renderPlayState(Adafruit_ST7735 &tft) {
     
     
     

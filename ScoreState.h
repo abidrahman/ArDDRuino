@@ -10,6 +10,6 @@
 #define ____ScoreState__
 
 void updateScoreState(unsigned long dt);
-void renderScoreState();
+void renderScoreState(Adafruit_ST7735 &tft);
 
 #endif /* defined(____ScoreState__) */

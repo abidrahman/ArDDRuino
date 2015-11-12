@@ -15,7 +15,7 @@ void updateMenuState(unsigned long dt) {
     
 }
 
-void renderMenuState() {
+void renderMenuState(Adafruit_ST7735 &tft) {
     
     
     

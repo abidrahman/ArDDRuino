@@ -10,7 +10,7 @@
 #define ____PlayState__
 
 void updatePlayState(unsigned long dt);
-void renderPlayState();
+void renderPlayState(Adafruit_ST7735 &tft);
 
 
 #endif /* defined(____PlayState__) */

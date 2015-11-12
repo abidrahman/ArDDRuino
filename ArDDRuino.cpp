@@ -28,6 +28,12 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Sd2Card card;
 
+struct Joystick {
+    int delta_vert;
+    int delta_horiz;
+    boolean pushed;
+};
+
 void initialization() {
     init();
     tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
@@ -68,7 +74,35 @@ int main() {
     unsigned long time = micros();
     unsigned long dt; //change in time from previous loop
     
+    int vertical, horizontal, selState;
+    int init_joystick_vert, init_joystick_horiz;
+    init_joystick_vert = analogRead(VERT);
+    init_joystick_horiz = analogRead(HORIZ);
+    Joystick joystick;
+    int selState = 0;
+    int lastSelState = 0;
+    
     while (true) {
+        
+        unsigned long currentTime = micros();
+        dt = currentTime - time;
+        time = currentTime;
+        
+        vertical = analogRead(VERT);      // will be 0-1023
+        horizontal = analogRead(HORIZ);   // will be 0-1023
+        selState = digitalRead(SEL);        // HIGH if not pressed, LOW otherwise
+        
+        //Compute the change in the joystick.
+        joystick.delta_vert = vertical - init_joystick_vert;
+        joystick.delta_horiz = horizontal - init_joystick_horiz;
+        joystick.pushed = false;
+        
+        if (selState != lastSelState) {
+            if (selState == HIGH) {
+                joystick.pushed = true;
+            }
+        }
+        lastSelState = selState;
         
         unsigned long currentTime = micros();
         dt = currentTime - time;
@@ -76,17 +110,17 @@ int main() {
         
         if (state == MENUSTATE) {
             updateMenuState(dt);
-            renderMenuState();
+            renderMenuState(tft, joystick);
         }
 
         if (state == PLAYSTATE) {
             updatePlayState(dt);
-            renderPlayState();
+            renderPlayState(tft, joystick);
         }
 
         if (state == SCORESTATE) {
             updateScoreState(dt);
-            renderScoreState();
+            renderScoreState(tft, joystick);
         }
     }
     
