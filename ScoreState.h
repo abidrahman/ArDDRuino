@@ -9,6 +9,13 @@
 #ifndef ____ScoreState__
 #define ____ScoreState__
 
-#include <stdio.h>
+#include "State.h"
+
+class ScoreState : State {
+public:
+    ScoreState();
+    void update(unsigned long dt);
+    void render();
+};
 
 #endif /* defined(____ScoreState__) */

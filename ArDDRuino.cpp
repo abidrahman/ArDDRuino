@@ -21,6 +21,8 @@
 #define HORIZ    1  // analog input
 #define SEL      9  // digital input
 
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
 void initialization() {
     init();
     tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
