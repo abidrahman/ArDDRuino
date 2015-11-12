@@ -9,12 +9,7 @@
 #ifndef ____ScoreState__
 #define ____ScoreState__
 
-#include "State.h"
-
-class ScoreState : public State {
-public:
-    void update(unsigned long dt);
-    void render();
-};
+void updateScoreState(unsigned long dt);
+void renderScoreState();
 
 #endif /* defined(____ScoreState__) */

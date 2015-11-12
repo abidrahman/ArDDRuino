@@ -7,3 +7,14 @@
 //
 
 #include "PlayState.h"
+
+void updatePlayState(unsigned long dt) {
+    
+    
+}
+
+void renderPlayState() {
+    
+    
+    
+}

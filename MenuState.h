@@ -1,12 +1,7 @@
 #ifndef ____MenuState__
 #define ____MenuState__
 
-#include "State.h"
-
-class MenuState : public State {
-public:
-    void update(unsigned long dt);
-    void render();
-};
+void updateMenuState(unsigned long dt);
+void renderMenuState();
 
 #endif /* defined(____MenuState__) */

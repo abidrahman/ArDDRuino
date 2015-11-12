@@ -7,3 +7,7 @@
 //
 
 #include "State.h"
+
+State::State(Adafruit_ST7735& tft) {
+    this.tft = tft;
+}

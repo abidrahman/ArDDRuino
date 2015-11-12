@@ -10,7 +10,6 @@
 #include <SD.h>
 #include "lcd_image.h"
 
-#include "State.h"
 #include "MenuState.h"
 #include "PlayState.h"
 #include "ScoreState.h"
@@ -65,9 +64,6 @@ int main() {
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
     GameState state = MENUSTATE;
     
-    MenuState menuState(tft);
-    PlayState playState(tft);
-    ScoreState scoreState(tft);
     
     unsigned long time = micros();
     unsigned long dt; //change in time from previous loop
@@ -79,18 +75,18 @@ int main() {
         time = currentTime;
         
         if (state == MENUSTATE) {
-            menuState.update(dt);
-            menuState.render();
+            updateMenuState(dt);
+            renderMenuState();
         }
 
         if (state == PLAYSTATE) {
-            playState.update(dt);
-            playState.render();
+            updatePlayState(dt);
+            renderPlayState();
         }
 
         if (state == SCORESTATE) {
-            scoreState.update(dt);
-            scoreState.render();
+            updateScoreState(dt);
+            renderScoreState();
         }
     }
     

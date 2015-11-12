@@ -8,12 +8,15 @@
 
 #include "MenuState.h"
 
-void MenuState::update(unsigned long dt) {
+void updateMenuState(unsigned long dt) {
+    
+    
     
     
 }
 
-void MenuState::render() {
+void renderMenuState() {
+    
     
     
 }

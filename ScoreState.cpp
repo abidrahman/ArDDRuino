@@ -8,8 +8,13 @@
 
 #include "ScoreState.h"
 
+void updateScoreState(unsigned long dt) {
+    
+    
+}
 
 
-void ScoreState::update(unsigned long dt) {
+void renderScoreState() {
+    
     
 }
