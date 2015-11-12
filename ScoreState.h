@@ -9,7 +9,13 @@
 #ifndef ____ScoreState__
 #define ____ScoreState__
 
+struct Joystick {
+    int delta_vert;
+    int delta_horiz;
+    boolean pushed;
+};
+
 void updateScoreState(unsigned long dt);
-void renderScoreState(Adafruit_ST7735 &tft);
+void renderScoreState(Adafruit_ST7735 &tft, Joystick &joystick);
 
 #endif /* defined(____ScoreState__) */

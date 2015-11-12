@@ -15,8 +15,7 @@ void updateMenuState(unsigned long dt) {
     
 }
 
-void renderMenuState(Adafruit_ST7735 &tft) {
-    
+void renderMenuState(Adafruit_ST7735 &tft, Joystick &joystick) {
     
     
 }

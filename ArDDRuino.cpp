@@ -74,19 +74,14 @@ int main() {
     unsigned long time = micros();
     unsigned long dt; //change in time from previous loop
     
-    int vertical, horizontal, selState;
+    int vertical, horizontal;
     int init_joystick_vert, init_joystick_horiz;
     init_joystick_vert = analogRead(VERT);
     init_joystick_horiz = analogRead(HORIZ);
     Joystick joystick;
-    int selState = 0;
-    int lastSelState = 0;
+    int lastSelState = 0, selState = 0;
     
     while (true) {
-        
-        unsigned long currentTime = micros();
-        dt = currentTime - time;
-        time = currentTime;
         
         vertical = analogRead(VERT);      // will be 0-1023
         horizontal = analogRead(HORIZ);   // will be 0-1023
@@ -107,6 +102,9 @@ int main() {
         unsigned long currentTime = micros();
         dt = currentTime - time;
         time = currentTime;
+        
+        
+        // STATES
         
         if (state == MENUSTATE) {
             updateMenuState(dt);

@@ -14,7 +14,7 @@ void updateScoreState(unsigned long dt) {
 }
 
 
-void renderScoreState(Adafruit_ST7735 &tft) {
+void renderScoreState(Adafruit_ST7735 &tft, Joystick &joystick) {
     
     
 }
