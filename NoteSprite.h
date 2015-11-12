@@ -4,16 +4,17 @@
 class NoteSprite
 {
 	public:
-	struct NoteSprite (int x, int y) {
-		
-		int x;
-		int y;
-		int vy;
+	NoteSprite (int x, int y) {
+		this.x = x;
+		this.y = y;
 		
 	};
 	
 	void update (int dt);
-	
+	void render ();
+	int x;
+	int y;
+	int vy;
 };
 
 
