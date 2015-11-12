@@ -14,10 +14,10 @@ void updatePlayState(unsigned long dt) {
 }
 
 void renderPlayState() {
-    makeCircle(NoteSprite.radius + 1, NoteSprite.radius + 1);
-    makeCircle(NoteSprite.radius*3 + 3, NoteSprite.radius + 1);
-    makeCircle(NoteSprite.radius*5 + 5, NoteSprite.radius + 1);
-    makeCircle(NoteSprite.radius*7 + 7, NoteSprite.radius + 1);
+    makeCircle(NoteSprite.RADIUS + 1, NoteSprite.RADIUS + 1);
+    makeCircle(NoteSprite.RADIUS*3 + 3, NoteSprite.RADIUS + 1);
+    makeCircle(NoteSprite.RADIUS*5 + 5, NoteSprite.RADIUS + 1);
+    makeCircle(NoteSprite.RADIUS*7 + 7, NoteSprite.RADIUS + 1);
         
 }
 
