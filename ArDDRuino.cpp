@@ -21,31 +21,67 @@
 #define HORIZ    1  // analog input
 #define SEL      9  // digital input
 
-unsigned long startTime;
-
+void initialization() {
+    init();
+    tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
+    
+    Serial.begin(9600);
+    
+    Serial.print("Initializing SD card...");
+    if (!SD.begin(SD_CS)) {
+        Serial.println("failed!");
+    }
+    Serial.println("OK!");
+    // Some more initialization
+    Serial.print("Doing raw initialization...");
+    if (!card.init(SPI_HALF_SPEED, SD_CS)) {
+        Serial.println("failed!");
+        while(true) {} // something is wrong
+    } else {
+        Serial.println("OK!");
+    }
+    
+    // Initialize Joystick
+    pinMode(SEL,INPUT);
+    digitalWrite(SEL,HIGH);
+    
+    // clear to black
+    tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
+    
+}
 
 int main() {
+    
+    initialization();
+    
     typedef enum {MenuState, PlayState, ScoreState} GameState;
     GameState = MenuState;
     
+    MenuState menuState;
+    PlayState playState;
+    ScoreState scoreState;
+    
+    unsigned long time = micros();
+    unsigned long dt; //change in time from previous loop
+    
     while (true) {
-
-        MenuState menuState;
-        PlayState playState;
-        ScoreState scoreState;
-
+        
+        unsigned long currentTime = micros();
+        dt = currentTime - time;
+        time = currentTime;
+        
         if (MenuState) {
-            menuState.update();
+            menuState.update(dt);
             menuState.render();
         }
 
         if (PlayState) {
-            playState.update();
+            playState.update(dt);
             playState.render();
         }
 
         if (ScoreState) {
-            scoreState.update();
+            scoreState.update(dt);
             scoreState.render();
         }
     
