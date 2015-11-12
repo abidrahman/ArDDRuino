@@ -6,14 +6,13 @@ class NoteSprite
 	public:
     
 	NoteSprite (int x, int y) {
-		this.x = x;
-		this.y = y;
-		
+	
+	
 	};
 	
 	void update (unsigned long dt);
 	void render ();
-	const int RADIUS = 15;
+	const static int RADIUS = 15;
 	int x;
 	int y;
 	int vy;
