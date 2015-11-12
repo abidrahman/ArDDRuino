@@ -18,3 +18,7 @@ void renderPlayState() {
     
     
 }
+
+void makeCircle(int x, int y) {
+	tft.fillCircle(x,y,radius,0xffff);
+}
