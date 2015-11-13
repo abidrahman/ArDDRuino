@@ -43,6 +43,8 @@ Joystick joystick;
 NoteSprite sprites[10];
 Vector cursor, old_cursor;
 
+TMRpcm audio;
+
 boolean shouldExitState = false;
 
 void initialization();
@@ -158,6 +160,9 @@ void initialization() {
 
 	// clear to black
 	tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
+
+	audio.speakerPin = 11;
+	audio.play("hello.wav");
 }
 
 void loadMenuState() {
