@@ -10,11 +10,6 @@
 #include <SD.h>
 #include "lcd_image.h"
 
-#include "TypeDeclarations.h"
-#include "MenuState.h"
-#include "PlayState.h"
-#include "ScoreState.h"
-
 // standard U of A library settings, assuming Atmel Mega SPI pins
 #define SD_CS    5  // Chip select line for SD card
 #define TFT_CS   6  // Chip select line for TFT display
@@ -28,6 +23,19 @@
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Sd2Card card;
+
+struct Joystick {
+	int delta_vert;
+	int delta_horiz;
+	boolean pushed;
+};
+
+void updateMenuState(dt);
+void renderMenuState(tft, joystick);
+void updatePlayState(dt);
+void renderPlayState(tft, joystick);
+void updateScoreState(dt);
+void renderScoreState(tft, joystick);
 
 void initialization() {
     init();
@@ -66,9 +74,6 @@ int main() {
     GameState state = PLAYSTATE;
     
     
-    unsigned long time = micros();
-    unsigned long dt; //change in time from previous loop
-    
     int vertical, horizontal;
     int init_joystick_vert, init_joystick_horiz;
     init_joystick_vert = analogRead(VERT);
@@ -103,19 +108,43 @@ int main() {
         
         if (state == MENUSTATE) {
             updateMenuState(dt);
-            renderMenuState(tft, joystick);
+            renderMenuState();
         }
 
         if (state == PLAYSTATE) {
             updatePlayState(dt);
-            renderPlayState(tft, joystick);
+            renderPlayState();
         }
 
         if (state == SCORESTATE) {
             updateScoreState(dt);
-            renderScoreState(tft, joystick);
+            renderScoreState();
         }
     }
     
     return 0;
+}
+
+void updateMenuState(dt) {
+
+}
+
+void renderMenuState() {
+
+}
+
+void updatePlayState(dt) {
+
+}
+
+void renderPlayState() {
+
+}
+
+void updateScoreState(dt) {
+
+}
+
+void renderScoreState() {
+
 }
