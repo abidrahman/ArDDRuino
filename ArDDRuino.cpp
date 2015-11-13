@@ -46,7 +46,7 @@ int cursor_y = 80;
 int old_cursor_x, old_cursor_y;
 
 void runMenuState();
-void updateMenuState(unsigned long dt);
+void updatePlayState(unsigned long dt);
 void renderPlayState();
 void updateScoreState(unsigned long dt);
 void renderScoreState();
