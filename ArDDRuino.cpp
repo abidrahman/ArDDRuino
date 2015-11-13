@@ -10,6 +10,7 @@
 #include <SD.h>
 #include "lcd_image.h"
 #include <math.h>
+#include "TMRpcm.h"
 
 #include "NoteSprite.h"
 
