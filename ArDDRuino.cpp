@@ -64,7 +64,7 @@ int main() {
     initialization();
     
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
-    GameState state = MENUSTATE;
+    GameState state = PLAYSTATE;
     
     int vertical, horizontal;
     int init_joystick_vert, init_joystick_horiz;
@@ -84,7 +84,7 @@ int main() {
         
         vertical = analogRead(VERT);      // will be 0-1023
         horizontal = analogRead(HORIZ);   // will be 0-1023
-        selState = digitalRead(SEL);        // HIGH if not pressed, LOW otherwise
+        selState = digitalRead(SEL);      // HIGH if not pressed, LOW otherwise
         
         //Compute the change in the joystick.
         joystick.delta_vert = vertical - init_joystick_vert;
@@ -115,8 +115,11 @@ int main() {
         }
 
         if (state == PLAYSTATE) {
-            updatePlayState(dt);
-            renderPlayState();
+			renderPlayState();
+			
+			updatePlayState(dt);
+			
+           
         }
 
         if (state == SCORESTATE) {
@@ -184,6 +187,7 @@ Vector balls[NUMBALLS];
 int frame = 0;
 const float BALLHEIGHT = 30;
 void animateBalls() {
+	
 	for (int i = 0; i < NUMBALLS; ++i)
 	{
 		tft.fillCircle(balls[i].x, balls[i].y, 1, 0x0);
@@ -193,18 +197,36 @@ void animateBalls() {
 
 	}
 	frame += 3;
+	
 }
 
 int getBallY(int i, int frame) {
 	return 100.0 + BALLHEIGHT / 2.0 * (1.0 + sin(fmod((frame * (float(i) / 500.0 + 0.02)), 2.0*3.1415926)));
 }
 
+
+const int NUMCIRCLES = 4;
+Vector Circles[NUMCIRCLES];
+const int RADIUS = 15;
 void updatePlayState(unsigned long dt) {
 
+	
 }
 
-void renderPlayState() {
 
+void renderPlayState() {
+	
+	tft.fillRect(0,0,32,168,tft.Color565(0x00,0xFF,0x00));
+	tft.fillRect(32,0,32,168,tft.Color565(0xFF,0x00,0x00));
+	tft.fillRect(64,0,32,168,tft.Color565(0x00,0xFF,0xFF));
+	tft.fillRect(96,0,32,168,tft.Color565(0x00,0x00,0xFF));
+	
+	for (int i = 1; i < NUMCIRCLES*2; ++i) {
+		Circles[i].x = RADIUS*i + i;
+		Circles[i].y = RADIUS;
+		tft.fillCircle(Circles[i].x, Circles[i].y, RADIUS, 0xffff);
+		++i;		
+	}
 }
 
 void updateScoreState(unsigned long dt) {
