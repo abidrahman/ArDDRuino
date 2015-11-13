@@ -15,7 +15,7 @@ public:
 	NoteSprite() :
 		x(-1),
 		y(-1),
-		onScreen = false
+		onScreen(false)
 	{}
 
 	const static int RADIUS = 15;
