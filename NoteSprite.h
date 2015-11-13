@@ -12,6 +12,12 @@ class NoteSprite
 {
 public:
     
+	NoteSprite() :
+		x(-1),
+		y(-1),
+		onScreen = false
+	{}
+
 	const static int RADIUS = 15;
 	const static int VELOCITY = -10;
 
