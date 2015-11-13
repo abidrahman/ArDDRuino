@@ -9,6 +9,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include "lcd_image.h"
+#include <math.h>
 
 #include "NoteSprite.h"
 
@@ -32,26 +33,31 @@ struct Joystick {
 	boolean pushed;
 };
 
-struct Cursor {
+struct Vector {
 	int x;
 	int y;
+	Vector() : x(0), y(0) { }
 };
 
 Joystick joystick;
 NoteSprite sprites[10];
-Cursor cursor, old_cursor;
+Vector cursor, old_cursor;
 
-int cursor_x = 64;
-int cursor_y = 80;
-int old_cursor_x, old_cursor_y;
+boolean shouldExitState = false;
 
+void initialization();
+
+void loadMenuState();
 void runMenuState();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
 void updateScoreState(unsigned long dt);
 void renderScoreState();
 
-void initialization();
+uint16_t color(int red, int green, int blue);
+
+void animateBalls();
+int getBallY(int i, int t);
 
 int main() {
     
@@ -66,8 +72,13 @@ int main() {
     init_joystick_horiz = analogRead(HORIZ);
     int lastSelState = 0, selState = 0;
 
+	cursor.x = 64;
+	cursor.y = 80;
+
 	unsigned long time = micros();
 	unsigned long dt;
+
+	unsigned long counter = 0;
 
     while (true) {
         
@@ -94,7 +105,13 @@ int main() {
         // STATES
         
         if (state == MENUSTATE) {
+			if (counter == 0) loadMenuState();
             runMenuState();
+			++counter;
+			if (shouldExitState) {
+				state = PLAYSTATE;
+				shouldExitState = false;
+			}
         }
 
         if (state == PLAYSTATE) {
@@ -140,13 +157,46 @@ void initialization() {
 	tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
 }
 
+void loadMenuState() {
+	tft.setCursor(5, 50);
+	tft.setTextColor(0x780F);
+	tft.setTextSize(2);
+	tft.print("ArDDRuino!");
+	tft.setCursor(20, 70);
+	tft.setTextColor(0xFD20);
+	tft.setTextSize(0.6);
+	tft.print("Click to begin");
+}
+
 void runMenuState() {
-	old_cursor.x = cursor.x;
+	/*old_cursor.x = cursor.x;
 	old_cursor.y = cursor.y;
-	cursor_x = cursor_x + joystick.delta_horiz / 100;
-	cursor_y = cursor_y + joystick.delta_vert / 100;
-	tft.fillRect(cursor.x, cursor.y, 3, 3, 0xF800);
-	tft.fillRect(old_cursor.x, old_cursor.y, 3, 3, 0xF800);
+	tft.fillRect(old_cursor.x, old_cursor.y, 3, 3, 0x0);
+	cursor.x = cursor.x + joystick.delta_horiz / 100;
+	cursor.y = cursor.y + joystick.delta_vert / 100;
+	tft.fillRect(cursor.x, cursor.y, 3, 3, 0xF800);*/
+	animateBalls();
+}
+
+
+const int NUMBALLS = 20;
+Vector balls[NUMBALLS];
+int frame = 0;
+const float BALLHEIGHT = 30;
+void animateBalls() {
+	for (int i = 0; i < NUMBALLS; ++i)
+	{
+		tft.fillCircle(balls[i].x, balls[i].y, 1, 0x0);
+		balls[i].x = 7 * i;
+		balls[i].y = getBallY(i, frame);
+		tft.fillCircle(balls[i].x, balls[i].y, 1, 0x03EF);
+
+	}
+	frame += 3;
+}
+
+int getBallY(int i, int frame) {
+	return 100.0 + BALLHEIGHT / 2.0 * (1.0 + sin(fmod((frame * (float(i) / 500.0 + 0.02)), 2.0*3.1415926)));
 }
 
 void updatePlayState(unsigned long dt) {
@@ -163,4 +213,10 @@ void updateScoreState(unsigned long dt) {
 
 void renderScoreState() {
 
+}
+
+uint16_t color(int red, int green, int blue) {
+	return (((31 * (red + 4)) / 255) << 11) |
+		(((63 * (green + 2)) / 255) << 5) |
+		((31 * (blue + 4)) / 255);
 }
