@@ -10,6 +10,8 @@
 #include <SD.h>
 #include "lcd_image.h"
 
+#include "NoteSprite.h"
+
 // standard U of A library settings, assuming Atmel Mega SPI pins
 #define SD_CS    5  // Chip select line for SD card
 #define TFT_CS   6  // Chip select line for TFT display
@@ -30,6 +32,19 @@ struct Joystick {
 	boolean pushed;
 };
 
+struct Cursor {
+	int x;
+	int y;
+};
+
+Joystick joystick;
+NoteSprite sprites[10];
+Cursor cursor, old_cursor;
+
+int cursor_x = 64;
+int cursor_y = 80;
+int old_cursor_x, old_cursor_y;
+
 void updateMenuState(dt);
 void renderMenuState(tft, joystick);
 void updatePlayState(dt);
@@ -37,50 +52,25 @@ void renderPlayState(tft, joystick);
 void updateScoreState(dt);
 void renderScoreState(tft, joystick);
 
-void initialization() {
-    init();
-    tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
-    
-    Serial.begin(9600);
-    
-    Serial.print("Initializing SD card...");
-    if (!SD.begin(SD_CS)) {
-        Serial.println("failed!");
-    }
-    Serial.println("OK!");
-    // Some more initialization
-    Serial.print("Doing raw initialization...");
-    if (!card.init(SPI_HALF_SPEED, SD_CS)) {
-        Serial.println("failed!");
-        while(true) {} // something is wrong
-    } else {
-        Serial.println("OK!");
-    }
-    
-    // Initialize Joystick
-    pinMode(SEL,INPUT);
-    digitalWrite(SEL,HIGH);
-    
-    // clear to black
-    tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
-    
-}
+void initialization();
 
 int main() {
     
     initialization();
     
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
-    GameState state = PLAYSTATE;
-    
+    GameState state = MENUSTATE;
     
     int vertical, horizontal;
     int init_joystick_vert, init_joystick_horiz;
     init_joystick_vert = analogRead(VERT);
     init_joystick_horiz = analogRead(HORIZ);
-    Joystick joystick;
     int lastSelState = 0, selState = 0;
     
+	for (int i = 0; i < 10; ++i) {
+		sprites[i] = new NoteSprite();
+	}
+
     while (true) {
         
         vertical = analogRead(VERT);      // will be 0-1023
@@ -103,12 +93,10 @@ int main() {
         dt = currentTime - time;
         time = currentTime;
         
-        
         // STATES
         
         if (state == MENUSTATE) {
-            updateMenuState(dt);
-            renderMenuState();
+            runMenuState();
         }
 
         if (state == PLAYSTATE) {
@@ -125,12 +113,42 @@ int main() {
     return 0;
 }
 
-void updateMenuState(dt) {
+void initialization() {
+	init();
+	tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
 
+	Serial.begin(9600);
+
+	Serial.print("Initializing SD card...");
+	if (!SD.begin(SD_CS)) {
+		Serial.println("failed!");
+	}
+	Serial.println("OK!");
+	// Some more initialization
+	Serial.print("Doing raw initialization...");
+	if (!card.init(SPI_HALF_SPEED, SD_CS)) {
+		Serial.println("failed!");
+		while (true) {} // something is wrong
+	}
+	else {
+		Serial.println("OK!");
+	}
+
+	// Initialize Joystick
+	pinMode(SEL, INPUT);
+	digitalWrite(SEL, HIGH);
+
+	// clear to black
+	tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
 }
 
-void renderMenuState() {
-
+void runMenuState() {
+	old_cursor.x = cursor.x;
+	old_cursor.y = cursor.y;
+	cursor_x = cursor_x + joystick.delta_horiz / 100;
+	cursor_y = cursor_y + joystick.delta_vert / 100;
+	tft.fillRect(cursor.x, cursor.y, 3, 3, 0xF800);
+	tft.fillRect(old_cursor.x, old_cursor.y, 3, 3, 0xF800);
 }
 
 void updatePlayState(dt) {

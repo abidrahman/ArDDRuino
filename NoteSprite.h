@@ -5,17 +5,16 @@ class NoteSprite
 {
 public:
     
-	NoteSprite (int x, int y) {
-        this->x;
-        this->y;
-	};
-	
-	void update (unsigned long dt);
-	void render ();
 	const static int RADIUS = 15;
+	const static int VELOCITY = -10;
+
+	boolean onScreen = false;
+
 	int x;
 	int y;
-	const static int vy = -10;
+
+	void update(unsigned long dt);
+
 };
 
 
