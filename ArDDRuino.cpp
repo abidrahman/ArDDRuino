@@ -10,6 +10,7 @@
 #include <SD.h>
 #include "lcd_image.h"
 
+#include "TypeDeclarations.h"
 #include "MenuState.h"
 #include "PlayState.h"
 #include "ScoreState.h"
@@ -27,12 +28,6 @@
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Sd2Card card;
-
-struct Joystick {
-    int delta_vert;
-    int delta_horiz;
-    boolean pushed;
-};
 
 void initialization() {
     init();

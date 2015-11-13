@@ -13,7 +13,7 @@
 #define TFT_DC   7  // Data/command line for TFT
 #define TFT_RST  8  // Reset line for TFT (or connect to +5V)
 
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
 
 
 void update (int dt) {

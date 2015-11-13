@@ -3,11 +3,11 @@
 
 class NoteSprite
 {
-	public:
+public:
     
 	NoteSprite (int x, int y) {
-	
-	
+        this->x;
+        this->y;
 	};
 	
 	void update (unsigned long dt);
@@ -15,7 +15,7 @@ class NoteSprite
 	const static int RADIUS = 15;
 	int x;
 	int y;
-	int vy;
+	const static int vy = -10;
 };
 
 
