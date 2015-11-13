@@ -8,7 +8,7 @@ public:
 	const static int RADIUS = 15;
 	const static int VELOCITY = -10;
 
-	boolean onScreen = false;
+	boolean onScreen;
 
 	int x;
 	int y;

@@ -45,12 +45,11 @@ int cursor_x = 64;
 int cursor_y = 80;
 int old_cursor_x, old_cursor_y;
 
-void updateMenuState(dt);
-void renderMenuState(tft, joystick);
-void updatePlayState(dt);
-void renderPlayState(tft, joystick);
-void updateScoreState(dt);
-void renderScoreState(tft, joystick);
+void runMenuState();
+void renderMenuState(unsigned long dt);
+void renderPlayState();
+void updateScoreState(unsigned long dt);
+void renderScoreState();
 
 void initialization();
 
@@ -70,6 +69,8 @@ int main() {
 	for (int i = 0; i < 10; ++i) {
 		sprites[i] = new NoteSprite();
 	}
+
+	unsigned long time = micros();
 
     while (true) {
         
@@ -151,7 +152,7 @@ void runMenuState() {
 	tft.fillRect(old_cursor.x, old_cursor.y, 3, 3, 0xF800);
 }
 
-void updatePlayState(dt) {
+void updatePlayState(unsigned long dt) {
 
 }
 
@@ -159,7 +160,7 @@ void renderPlayState() {
 
 }
 
-void updateScoreState(dt) {
+void updateScoreState(unsigned long dt) {
 
 }
 

@@ -6,9 +6,9 @@
 #include <SD.h>
 #include "lcd_image.h"
 
+boolean NoteSprite::onScreen = false;
 
-
-void update (int dt) {
+void NoteSprite::update (int dt) {
 	
 }
 
