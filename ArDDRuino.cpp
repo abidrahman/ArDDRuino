@@ -46,7 +46,7 @@ int cursor_y = 80;
 int old_cursor_x, old_cursor_y;
 
 void runMenuState();
-void renderMenuState(unsigned long dt);
+void updateMenuState(unsigned long dt);
 void renderPlayState();
 void updateScoreState(unsigned long dt);
 void renderScoreState();
@@ -65,12 +65,9 @@ int main() {
     init_joystick_vert = analogRead(VERT);
     init_joystick_horiz = analogRead(HORIZ);
     int lastSelState = 0, selState = 0;
-    
-	for (int i = 0; i < 10; ++i) {
-		sprites[i] = new NoteSprite();
-	}
 
 	unsigned long time = micros();
+	unsigned long dt;
 
     while (true) {
         
