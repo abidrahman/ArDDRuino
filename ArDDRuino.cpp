@@ -32,7 +32,8 @@ struct Joystick {
 	int delta_vert;
 	int delta_horiz;
 	boolean pushed;
-	int count;
+	int pushcount;
+    Joystick() : pushcount(-1) { }
 };
 
 struct Vector {
@@ -42,7 +43,6 @@ struct Vector {
 };
 
 Joystick joystick;
-joystick.count = -1;
 NoteSprite sprites[10];
 Vector cursor, old_cursor;
 
@@ -99,7 +99,7 @@ int main() {
         if (selState != lastSelState) {
             if (selState == HIGH) {
                 joystick.pushed = true;
-                joystick.count++;
+                ++joystick.pushcount;
             }
         }
         lastSelState = selState;
@@ -114,8 +114,8 @@ int main() {
 			if (counter == 0) loadMenuState();
             runMenuState();
 			++counter;
-			if (joystick.pushed == true) shouldExitState = true;
-			if (shouldExitState && joystick.count > 0) {
+			if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
+			if (shouldExitState) {
 				state = PLAYSTATE;
 				shouldExitState = false;
 			}
@@ -124,13 +124,11 @@ int main() {
         if (state == PLAYSTATE) {
 			renderPlayState();
 			updatePlayState(dt);
-			if (joystick.pushed == true) shouldExitState = true;
-			if (shouldExitState && joystick.count > 0) {
+			if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
+			if (shouldExitState) {
 				state = PLAYSTATE;
 				shouldExitState = false;
 			}
-			
-           
         }
 
         if (state == SCORESTATE) {
