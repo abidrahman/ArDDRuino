@@ -32,6 +32,7 @@ struct Joystick {
 	int delta_vert;
 	int delta_horiz;
 	boolean pushed;
+	int count;
 };
 
 struct Vector {
@@ -41,6 +42,7 @@ struct Vector {
 };
 
 Joystick joystick;
+joystick.count = -1;
 NoteSprite sprites[10];
 Vector cursor, old_cursor;
 
@@ -67,7 +69,7 @@ int main() {
     initialization();
     
     typedef enum {MENUSTATE, PLAYSTATE, SCORESTATE} GameState;
-    GameState state = PLAYSTATE;
+    GameState state = MENUSTATE;
     
     int vertical, horizontal;
     int init_joystick_vert, init_joystick_horiz;
@@ -97,6 +99,7 @@ int main() {
         if (selState != lastSelState) {
             if (selState == HIGH) {
                 joystick.pushed = true;
+                joystick.count++;
             }
         }
         lastSelState = selState;
@@ -111,7 +114,8 @@ int main() {
 			if (counter == 0) loadMenuState();
             runMenuState();
 			++counter;
-			if (shouldExitState) {
+			if (joystick.pushed == true) shouldExitState = true;
+			if (shouldExitState && joystick.count > 0) {
 				state = PLAYSTATE;
 				shouldExitState = false;
 			}
@@ -119,8 +123,12 @@ int main() {
 
         if (state == PLAYSTATE) {
 			renderPlayState();
-			
 			updatePlayState(dt);
+			if (joystick.pushed == true) shouldExitState = true;
+			if (shouldExitState && joystick.count > 0) {
+				state = PLAYSTATE;
+				shouldExitState = false;
+			}
 			
            
         }
@@ -162,8 +170,8 @@ void initialization() {
 	// clear to black
 	tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
 
-	audio.speakerPin = 11;
-	audio.play("hello.wav");
+	//audio.speakerPin = 11;
+	//audio.play("hello.wav");
 }
 
 void loadMenuState() {
@@ -221,17 +229,18 @@ void updatePlayState(unsigned long dt) {
 
 
 void renderPlayState() {
+
+	// POTENTIAL BACKGROUND (KEEP BLACK FOR NOW)
+	//~ tft.fillRect(0,0,32,168,tft.Color565(0x00,0xFF,0x00));
+	//~ tft.fillRect(32,0,32,168,tft.Color565(0xFF,0x00,0x00));
+	//~ tft.fillRect(64,0,32,168,tft.Color565(0x00,0xFF,0xFF));
+	//~ tft.fillRect(96,0,32,168,tft.Color565(0x00,0x00,0xFF));
 	
-	tft.fillRect(0,0,32,168,tft.Color565(0x00,0xFF,0x00));
-	tft.fillRect(32,0,32,168,tft.Color565(0xFF,0x00,0x00));
-	tft.fillRect(64,0,32,168,tft.Color565(0x00,0xFF,0xFF));
-	tft.fillRect(96,0,32,168,tft.Color565(0x00,0x00,0xFF));
-	
-	for (int i = 1; i < NUMCIRCLES*2; ++i) {
+	for (int i = 1; i < NUMCIRCLES*2; i+2) {
+		tft.fillCircle(Circles[i].x, Circles[i].y, RADIUS, 0x0000);
 		Circles[i].x = RADIUS*i + i;
 		Circles[i].y = RADIUS;
 		tft.fillCircle(Circles[i].x, Circles[i].y, RADIUS, 0xffff);
-		++i;		
 	}
 }
 
