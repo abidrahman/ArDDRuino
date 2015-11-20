@@ -26,6 +26,8 @@ public:
     int getNote();
     int getX();
     int getY();
+    void setX(int x);
+    void setY(int y);
     
 	void update(unsigned long dt);
     
