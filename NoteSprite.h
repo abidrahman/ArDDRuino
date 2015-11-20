@@ -16,18 +16,23 @@ public:
 		x(-1),
 		y(-1),
 		onScreen(false)
-	{}
+	{ }
 
 	const static int RADIUS = 15;
-	const static int VELOCITY = -10;
+	const static int VELOCITY = 10;
 
 	boolean onScreen;
-
-	int x;
-	int y;
-
+    
+    int getNote();
+    int getX();
+    int getY();
+    
 	void update(unsigned long dt);
-
+    
+private:
+    float x;
+    float y;
+    int note;
 };
 
 
