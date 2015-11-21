@@ -127,8 +127,9 @@ int main() {
 
         if (state == PLAYSTATE) {
             if (counter == 0) loadPlayState();
-            renderPlayState();
             updatePlayState(dt);
+            renderPlayState();
+            
             ++counter;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
@@ -246,8 +247,8 @@ void loadPlayState() {
     tft.fillScreen(tft.Color565(0x00,0x00,0x00));
     
     for (int i = 0; i < NUMCIRCLES; ++i) {
-        Circles[i].setX(15 + Circles[i].RADIUS*30*i + (2*i));
-        Circles[i].setY(Circles[i].RADIUS);
+        Circles[i].setX(15 + i*35);
+        Circles[i].setY(-Circles[i].RADIUS*i*2);
         Circles[i].onScreen = true;
     }
     
@@ -278,13 +279,15 @@ void updatePlayState(unsigned long dt) {
     
     */
 
-       for (int i = 0; i < NUMCIRCLES; ++i) {
-            tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0x0000);
-            Circles[i].update(dt);
-            if (Circles[i].getY() > (160 + Circles[i].RADIUS)) {
-                Circles[i].onScreen = true;
-            }
+    for (int i = 0; i < NUMCIRCLES; ++i) {
+        tft.fillCircle(Circles[i].getX(), Circles[i].getY()-8, Circles[i].RADIUS, 0x0000);
+        Circles[i].update(dt);
+        if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
+            Circles[i].setY(-20);
         }
+    }
+    Serial.print("dt: "); Serial.println(dt);
+    Serial.print("y: "); Serial.println(Circles[0].getY());
         
 }
 
@@ -292,7 +295,7 @@ void renderPlayState() {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
-            tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0x03EF);
+            tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0xFFFF);
         }
     }
 }

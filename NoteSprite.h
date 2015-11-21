@@ -18,8 +18,8 @@ public:
 		onScreen(false)
 	{ }
 
-	const static int RADIUS = 1;
-	const static int VELOCITY = 30;
+	const static int RADIUS = 3;
+	const static int VELOCITY = 60;
 
 	boolean onScreen;
     

@@ -22,7 +22,8 @@ void NoteSprite::setY(int y) {
 
 
 void NoteSprite::update(unsigned long dt) {
-    y = y + ((float) VELOCITY * ((float) dt / 1000000.0));
+    y += 2;
+//    y = y + ((float) VELOCITY * ((float) dt / 1000000.0));
 }
 
 
