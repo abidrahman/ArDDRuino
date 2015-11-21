@@ -19,7 +19,7 @@ public:
 	{ }
 
 	const static int RADIUS = 3;
-	const static int VELOCITY = 60;
+	const static int VELOCITY = 80;
 
 	boolean onScreen;
     
@@ -31,10 +31,11 @@ public:
     
 	void update(unsigned long dt);
     
+    int note;
+    
 private:
     float x;
     float y;
-    int note;
 };
 
 

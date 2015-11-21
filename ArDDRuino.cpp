@@ -11,8 +11,10 @@
 #include "lcd_image.h"
 #include <math.h>
 #include "TMRpcm.h"
+#include <avr/pgmspace.h>
 
 #include "NoteSprite.h"
+#include "songs.h"
 
 // standard U of A library settings, assuming Atmel Mega SPI pins
 #define SD_CS    5  // Chip select line for SD card
@@ -66,6 +68,7 @@ void animateBalls();
 int getBallY(int i, int t);
 
 unsigned long time = micros();
+unsigned long game_time = 0;
 
 int main() {
     
@@ -119,7 +122,6 @@ int main() {
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
                 state = PLAYSTATE;
-                time = 0;
                 shouldExitState = false;
                 counter = 0;
             }
@@ -129,8 +131,8 @@ int main() {
             if (counter == 0) loadPlayState();
             updatePlayState(dt);
             renderPlayState();
-            
             ++counter;
+            game_time += dt;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
                 state = PLAYSTATE;
@@ -233,62 +235,64 @@ int getBallY(int i, int frame) {
 
 
 
-const int NUMCIRCLES = 4;
+const int NUMCIRCLES = 20;
 NoteSprite Circles[NUMCIRCLES];
 
-int nextEventTime = 0;
-int eventIndex = 0;
+unsigned long nextEventTime;
+int eventIndex;
 boolean newEvent;
-
 
 void loadPlayState() {
 
     //INITIALIZE PLAYSTATE BACKGROUND
     tft.fillScreen(tft.Color565(0x00,0x00,0x00));
     
-    for (int i = 0; i < NUMCIRCLES; ++i) {
-        Circles[i].setX(15 + i*35);
-        Circles[i].setY(-Circles[i].RADIUS*i*2);
-        Circles[i].onScreen = true;
-    }
-    
-    //nextEventTime = songData[eventIndex];
-    
+    nextEventTime = 0;
+    eventIndex = 0;
+    nextEventTime = pgm_read_dword(&song1[eventIndex]);
 }
 
+
 int note;
-int count1 = 0;
 void updatePlayState(unsigned long dt) {
-    /*
+    Serial.print("game time"); Serial.println(game_time);
+    Serial.print("next event time"); Serial.println(nextEventTime);
     
-    if (time > nextEventTime) {
+    if (game_time > nextEventTime) {
         newEvent = true;
     }
+    
     if (newEvent) {
+        Serial.println("new event");
         newEvent = false;
-        note = songData[eventIndex+1];
+        note = pgm_read_dword(&song1[eventIndex+1]);
         eventIndex += 2;
-        nextEventTime = songData[eventIndex];
+        nextEventTime = pgm_read_dword(&song1[eventIndex]);
         for (int i = 0; i < NUMCIRCLES; ++i) {
             if (Circles[i].onScreen == false) {
                 Circles[i].note = note;
+                Circles[i].onScreen = true;
+                Circles[i].setY(-5);
+                Circles[i].setX(Circles[i].note * 25);
+                
+                break;
             }
         }
 
     }
-    
-    */
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
-        tft.fillCircle(Circles[i].getX(), Circles[i].getY()-8, Circles[i].RADIUS, 0x0000);
-        Circles[i].update(dt);
-        if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
-            Circles[i].setY(-20);
+        if (Circles[i].onScreen == true) {
+            tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS, 0x0);
+            Circles[i].update(dt);
+            if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
+                Circles[i].onScreen = false;
+            }
         }
     }
-    Serial.print("dt: "); Serial.println(dt);
-    Serial.print("y: "); Serial.println(Circles[0].getY());
-        
+//    Serial.print("dt: "); Serial.println(dt);
+//    Serial.print("y: "); Serial.println(Circles[0].getY());
+    
 }
 
 void renderPlayState() {
