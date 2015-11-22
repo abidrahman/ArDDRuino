@@ -1,20 +1,20 @@
 build-cli/pcmRF.o: pcmRF.cpp pcmRF.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Arduino.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/binary.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/WCharacter.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/WString.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/HardwareSerial.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Stream.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Print.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Printable.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/new.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/variants/mega/pins_arduino.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/Arduino.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/binary.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/WCharacter.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/WString.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/HardwareSerial.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/Stream.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/Print.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/Printable.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/new.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/variants/mega/pins_arduino.h \
   TMRpcm.h pcmConfig.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/SD.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/SdFat.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/Sd2Card.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/Sd2PinMap.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/SdInfo.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/FatStructs.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Print.h \
-  /Users/kevin/arduino-ua/Arduino.app/Contents/Resources/Java/libraries/Adafruit_SD/utility/SdFatUtil.h
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/SD.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/SdFat.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/Sd2Card.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/Sd2PinMap.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/SdInfo.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/FatStructs.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/hardware/arduino/cores/arduino/Print.h \
+  /home/cmput274/arduino-ua/arduino-1.0.1-32/libraries/Adafruit_SD/utility/SdFatUtil.h

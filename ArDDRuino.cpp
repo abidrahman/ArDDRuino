@@ -236,6 +236,7 @@ int getBallY(int i, int frame) {
 
 
 const int NUMCIRCLES = 20;
+const int BARS = 4;
 NoteSprite Circles[NUMCIRCLES];
 
 unsigned long nextEventTime;
@@ -246,6 +247,13 @@ void loadPlayState() {
 
     //INITIALIZE PLAYSTATE BACKGROUND
     tft.fillScreen(tft.Color565(0x00,0x00,0x00));
+
+    tft.fillRect(0,135,128,2,tft.Color565(0x00,0xFF,0x00));
+    tft.fillRect(0,153,128,2,tft.Color565(0xFF,0x00,0x00));
+
+    for (int i = 1; i < BARS + 1; ++i) {
+        tft.fillRect(i*25 - 5,0,11,160,0xFFFF);
+    }
     
     nextEventTime = 0;
     eventIndex = 0;
@@ -283,7 +291,7 @@ void updatePlayState(unsigned long dt) {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
-            tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS, 0x0);
+            tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS + 1, 0xFFFF);
             Circles[i].update(dt);
             if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
                 Circles[i].onScreen = false;
@@ -299,7 +307,7 @@ void renderPlayState() {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
-            tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0xFFFF);
+            tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0x0);
         }
     }
 }
