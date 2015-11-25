@@ -27,6 +27,12 @@
 #define HORIZ    1  // analog input
 #define SEL      9  // digital input
 
+// button pins
+#define BTNPIN1 31
+#define BTNPIN2 33
+#define BTNPIN3 35
+#define BTNPIN4 37
+
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Sd2Card card;
 
@@ -44,6 +50,16 @@ struct Vector {
     Vector() : x(0), y(0) { }
 };
 
+int btnPins[] = {BTNPIN1, BTNPIN2, BTNPIN3, BTNPIN4};
+int btnState[] = {0, 0, 0, 0};
+int lastBtnState[] = {0, 0, 0, 0};
+
+struct Button {
+    boolean pushed;
+};
+
+Button Buttons[4];
+
 Joystick joystick;
 NoteSprite sprites[10];
 Vector cursor, old_cursor;
@@ -56,6 +72,7 @@ void initialization();
 
 void loadPlayState();
 void loadMenuState();
+void loadScoreState();
 void runMenuState();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
@@ -86,7 +103,6 @@ int main() {
     cursor.x = 64;
     cursor.y = 80;
 
-
     unsigned long dt;
     unsigned long counter = 0;
 
@@ -112,6 +128,9 @@ int main() {
         unsigned long currentTime = micros();
         dt = currentTime - time;
         time = currentTime;
+
+        Serial.println(shouldExitState);
+        Serial.println(state);
         
         // STATES
         
@@ -119,11 +138,11 @@ int main() {
             if (counter == 0) loadMenuState();
             runMenuState();
             ++counter;
+            shouldExitState = false;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
-                state = PLAYSTATE;
-                shouldExitState = false;
                 counter = 0;
+                state = PLAYSTATE;
             }
         }
 
@@ -133,17 +152,25 @@ int main() {
             renderPlayState();
             ++counter;
             game_time += dt;
+            shouldExitState = false;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
-            if (shouldExitState) {
-                state = PLAYSTATE;
-                shouldExitState = false;
+            if (shouldExitState && game_time > 10000000) {
                 counter = 0;
+                state = SCORESTATE;
             }
         }
 
         if (state == SCORESTATE) {
+            if (counter == 0) loadScoreState();
+            ++counter;
             updateScoreState(dt);
             renderScoreState();
+            shouldExitState = false;
+            if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
+            if (shouldExitState) {
+                counter = 0;
+                state = SCORESTATE;
+            }
         }
     }
     
@@ -239,6 +266,10 @@ const int NUMCIRCLES = 20;
 const int BARS = 4;
 NoteSprite Circles[NUMCIRCLES];
 
+const int TAPZONE_ABOVE = 135;
+const int TAPZONE_BELOW = 155;
+int Score;
+
 unsigned long nextEventTime;
 int eventIndex;
 boolean newEvent;
@@ -248,8 +279,8 @@ void loadPlayState() {
     //INITIALIZE PLAYSTATE BACKGROUND
     tft.fillScreen(tft.Color565(0x00,0x00,0x00));
 
-    tft.fillRect(0,135,128,2,tft.Color565(0x00,0xFF,0x00));
-    tft.fillRect(0,153,128,2,tft.Color565(0xFF,0x00,0x00));
+    tft.fillRect(0,TAPZONE_ABOVE - 2,128,2,tft.Color565(0x00,0xFF,0x00));
+    tft.fillRect(0,TAPZONE_BELOW - 2,128,2,tft.Color565(0xFF,0x00,0x00));
 
     for (int i = 1; i < BARS + 1; ++i) {
         tft.fillRect(i*25 - 5,0,11,160,0xFFFF);
@@ -258,6 +289,8 @@ void loadPlayState() {
     nextEventTime = 0;
     eventIndex = 0;
     nextEventTime = pgm_read_dword(&song1[eventIndex]);
+    
+    Score = 0;
 }
 
 
@@ -288,6 +321,17 @@ void updatePlayState(unsigned long dt) {
         }
 
     }
+    
+    for (int i = 0; i < 4; ++i) {
+        Buttons[i].pushed = false;
+        btnState[i] = digitalRead(btnPins[i]);
+        if (btnState[i] != lastBtnState[i]) {
+            if (btnState[i] == HIGH) {
+                Buttons[i].pushed = true;
+            }
+        }
+    
+    }
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
@@ -296,6 +340,13 @@ void updatePlayState(unsigned long dt) {
             if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
                 Circles[i].onScreen = false;
             }
+            if (Circles[i].getY() > TAPZONE_ABOVE && Circles[i].getY() < TAPZONE_BELOW) {
+                if (Buttons[Circles[i].note -1].pushed == true) {
+                    ++Score;
+                    Circles[i].onScreen = false;
+                    tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 3, Circles[i].RADIUS + 2, 0xFFFF);
+                }
+            }        
         }
     }
 //    Serial.print("dt: "); Serial.println(dt);
@@ -313,6 +364,20 @@ void renderPlayState() {
 }
 
 // END PLAY STATE
+
+void loadScoreState() {
+    tft.fillScreen(tft.Color565(0x00,0x00,0x00));
+    tft.setCursor(17, 50);
+    tft.setTextColor(0x780F);
+    tft.setTextSize(2);
+    tft.print("Score: ");
+    tft.setCursor(90, 50);
+    tft.print(Score);
+    tft.setCursor(8, 70);
+    tft.setTextColor(0xFD20);
+    tft.setTextSize(0.6);
+    tft.print("Click to try again!");
+}
 
 void updateScoreState(unsigned long dt) {
 
