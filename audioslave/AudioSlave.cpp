@@ -10,10 +10,12 @@
 // standard U of A library settings, assuming Atmel Mega SPI pins
 #define SD_CS    5  // Chip select line for SD card
 
+
 Sd2Card card;
 TMRpcm audio;
 
 void playSong() {
+  delay(2000);
   audio.speakerPin = 11;
   audio.play("Numb.wav");
   Serial.println("playing song");

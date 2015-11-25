@@ -10,7 +10,6 @@
 #include <SD.h>
 #include "lcd_image.h"
 #include <math.h>
-#include "TMRpcm.h"
 #include <avr/pgmspace.h>
 
 #include "NoteSprite.h"
@@ -64,8 +63,6 @@ Joystick joystick;
 NoteSprite sprites[10];
 Vector cursor, old_cursor;
 
-TMRpcm audio;
-
 boolean shouldExitState = false;
 
 void initialization();
@@ -74,10 +71,12 @@ void loadPlayState();
 void loadMenuState();
 void loadScoreState();
 void runMenuState();
+void updateScore();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
 void updateScoreState(unsigned long dt);
 void renderScoreState();
+void playSong(char *songName);
 
 uint16_t color(int red, int green, int blue);
 
@@ -174,6 +173,9 @@ int main() {
         }
     }
     
+    Serial.end();
+    Serial3.end();
+    
     return 0;
 }
 
@@ -182,6 +184,7 @@ void initialization() {
     tft.initR(INITR_BLACKTAB); // initialize a ST7735R chip, black tab
 
     Serial.begin(9600);
+    Serial3.begin(9600);
 
     Serial.print("Initializing SD card...");
     if (!SD.begin(SD_CS)) {
@@ -291,6 +294,8 @@ void loadPlayState() {
     nextEventTime = pgm_read_dword(&song1[eventIndex]);
     
     Score = 0;
+    
+    playSong("Numb.wav");
 }
 
 
@@ -342,9 +347,10 @@ void updatePlayState(unsigned long dt) {
             }
             if (Circles[i].getY() > TAPZONE_ABOVE && Circles[i].getY() < TAPZONE_BELOW) {
                 if (Buttons[Circles[i].note -1].pushed == true) {
-                    ++Score;
                     Circles[i].onScreen = false;
                     tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 3, Circles[i].RADIUS + 2, 0xFFFF);
+                    tft.fillRect(58,5,10,10,0x00);
+                    updateScore();
                 }
             }        
         }
@@ -361,6 +367,22 @@ void renderPlayState() {
             tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS, 0x0);
         }
     }
+}
+
+void updateScore() {
+
+    ++Score;
+
+    //Display score on screen.
+    tft.setCursor(9, 5);
+    tft.setTextColor(0xFFFF);
+    tft.setTextSize(1);
+    tft.print(Score);
+}
+
+void playSong(char *songName) {
+    Serial3.write(10);
+
 }
 
 // END PLAY STATE
