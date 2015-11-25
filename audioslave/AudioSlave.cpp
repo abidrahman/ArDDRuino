@@ -17,6 +17,7 @@ TMRpcm audio;
 void playSong() {
   delay(2000);
   audio.speakerPin = 11;
+  audio.setVolume(3);
   audio.play("Numb.wav");
   Serial.println("playing song");
 }

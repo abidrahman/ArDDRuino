@@ -29,7 +29,7 @@ const prog_uint32_t song1[] PROGMEM = {
 	start1 + bpm1_dt * 25.5, 1,
 	start1 + bpm1_dt * 25.5, 3,
 	start1 + bpm1_dt * 27, 1,
-	start1 + bpm1_dt * 27, 2
+	start1 + bpm1_dt * 27, 2,
 	start1 + bpm1_dt * 30.5, 1,
 	start1 + bpm1_dt * 31, 2,
 	start1 + bpm1_dt * 31.5, 1,

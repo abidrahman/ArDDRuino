@@ -72,6 +72,7 @@ void loadMenuState();
 void loadScoreState();
 void runMenuState();
 void updateScore();
+void updateBars();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
 void updateScoreState(unsigned long dt);
@@ -269,13 +270,19 @@ const int NUMCIRCLES = 20;
 const int BARS = 4;
 NoteSprite Circles[NUMCIRCLES];
 
-const int TAPZONE_ABOVE = 135;
+const int TAPZONE_ABOVE = 140;
 const int TAPZONE_BELOW = 155;
 int Score;
+int conScore;
+int multiplier;
+int oldMultiplier;
+int barColor;
 
 unsigned long nextEventTime;
 int eventIndex;
 boolean newEvent;
+
+
 
 void loadPlayState() {
 
@@ -285,8 +292,9 @@ void loadPlayState() {
     tft.fillRect(0,TAPZONE_ABOVE - 2,128,2,tft.Color565(0x00,0xFF,0x00));
     tft.fillRect(0,TAPZONE_BELOW - 2,128,2,tft.Color565(0xFF,0x00,0x00));
 
+    barColor = 0xFFFF;
     for (int i = 1; i < BARS + 1; ++i) {
-        tft.fillRect(i*25 - 5,0,11,160,0xFFFF);
+        tft.fillRect(i*25 - 5,0,11,160,barColor);
     }
     
     nextEventTime = 0;
@@ -294,6 +302,9 @@ void loadPlayState() {
     nextEventTime = pgm_read_dword(&song1[eventIndex]);
     
     Score = 0;
+    conScore = 0;
+    int multiplier;
+    int oldMultiplier;
     updateScore();
     
     playSong("Numb.wav");
@@ -302,30 +313,32 @@ void loadPlayState() {
 
 int note;
 void updatePlayState(unsigned long dt) {
-    Serial.print("game time"); Serial.println(game_time);
-    Serial.print("next event time"); Serial.println(nextEventTime);
+    //Serial.print("game time"); Serial.println(game_time);
+    //Serial.print("next event time"); Serial.println(nextEventTime);
     
     if (game_time > nextEventTime) {
         newEvent = true;
     }
     
-    if (newEvent) {
-        Serial.println("new event");
+    if (newEvent) { 
+        //Serial.println("new event");
+        unsigned long eventTime = nextEventTime;
         newEvent = false;
-        note = pgm_read_dword(&song1[eventIndex+1]);
-        eventIndex += 2;
-        nextEventTime = pgm_read_dword(&song1[eventIndex]);
-        for (int i = 0; i < NUMCIRCLES; ++i) {
-            if (Circles[i].onScreen == false) {
-                Circles[i].note = note;
-                Circles[i].onScreen = true;
-                Circles[i].setY(-5);
-                Circles[i].setX(Circles[i].note * 25);
-                
-                break;
+        while (pgm_read_dword(&song1[eventIndex]) == eventTime) {
+            note = pgm_read_dword(&song1[eventIndex+1]);
+            eventIndex += 2;
+            nextEventTime = pgm_read_dword(&song1[eventIndex]);
+            for (int i = 0; i < NUMCIRCLES; ++i) {
+                if (Circles[i].onScreen == false) {
+                    Circles[i].note = note;
+                    Circles[i].onScreen = true;
+                    Circles[i].setY(-5);
+                    Circles[i].setX(Circles[i].note * 25);
+                    
+                    break;
+                }
             }
         }
-
     }
     
     for (int i = 0; i < 4; ++i) {
@@ -341,26 +354,53 @@ void updatePlayState(unsigned long dt) {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
-            tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS + 1, 0xFFFF);
+            tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS + 1, barColor);
             Circles[i].update(dt);
             if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
                 Circles[i].onScreen = false;
             }
-            if (Circles[i].getY() > TAPZONE_ABOVE && Circles[i].getY() < TAPZONE_BELOW) {
-                if (Buttons[Circles[i].note -1].pushed == true) {
-                    Circles[i].onScreen = false;
-                    tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 3, Circles[i].RADIUS + 2, 0xFFFF);
-                    tft.fillRect(110,5,10,10,0x00);
-                    Score++;
-                    updateScore();
-                }
-            }        
+            if (Circles[i].getY() > TAPZONE_ABOVE && Circles[i].getY() < TAPZONE_BELOW && Buttons[Circles[i].note -1].pushed == true) {
+                Circles[i].onScreen = false;
+                tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS + 2, barColor);
+                tft.fillRect(110,5,10,10,0x00);
+                Score++;
+                conScore++;
+                multiplier = conScore / 5;
+                updateScore();
+                
+            }   
+            if (Circles[i].getY() > TAPZONE_BELOW) {     
+                conScore = 0;
+            }
         }
     }
+    
+    if (oldMultiplier != multiplier) {
+        updateBars();
+        oldMultiplier = multiplier;
+    }
+
+        
+    
 //    Serial.print("dt: "); Serial.println(dt);
 //    Serial.print("y: "); Serial.println(Circles[0].getY());
     
 }
+
+void updateBars() {
+    
+    if (multiplier == 0) {
+       barColor = 0xFFFF;
+    } else if (multiplier == 1) { barColor = 0xFFCCCC;
+    } else if (multiplier == 2) { barColor = 0xFF8080;
+    } else if (multiplier == 3) { barColor = 0xFF4D4D;
+    } else if (multiplier == 4) { barColor = 0xFF0000;
+    }
+    for (int i = 1; i < BARS + 1; ++i) {
+        tft.fillRect(i*25 - 5,0,11,160,barColor);
+    }
+}
+    
 
 void renderPlayState() {
 
