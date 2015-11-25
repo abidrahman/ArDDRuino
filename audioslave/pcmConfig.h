@@ -19,7 +19,15 @@ Blog: https://tmrh20.blogspot.com/
 
 #include <Arduino.h>
 
+
+
+/****************** GENERAL USER DEFINES *********************************
+ See https://github.com/TMRh20/TMRpcm/wiki for info on usage
+
+   Override the default size of the buffers (MAX 254). There are 2 buffers, so memory usage will be double this number
+   Defaults to 64bytes for Uno etc. 254 for Mega etc. note: In multi mode there are 4 buffers*/
 #define SD_FULLSPEED
+
 
 
 #endif
