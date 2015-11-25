@@ -294,6 +294,7 @@ void loadPlayState() {
     nextEventTime = pgm_read_dword(&song1[eventIndex]);
     
     Score = 0;
+    updateScore();
     
     playSong("Numb.wav");
 }
@@ -349,7 +350,8 @@ void updatePlayState(unsigned long dt) {
                 if (Buttons[Circles[i].note -1].pushed == true) {
                     Circles[i].onScreen = false;
                     tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 3, Circles[i].RADIUS + 2, 0xFFFF);
-                    tft.fillRect(58,5,10,10,0x00);
+                    tft.fillRect(110,5,10,10,0x00);
+                    Score++;
                     updateScore();
                 }
             }        
@@ -370,11 +372,8 @@ void renderPlayState() {
 }
 
 void updateScore() {
-
-    ++Score;
-
     //Display score on screen.
-    tft.setCursor(9, 5);
+    tft.setCursor(110, 5);
     tft.setTextColor(0xFFFF);
     tft.setTextSize(1);
     tft.print(Score);
