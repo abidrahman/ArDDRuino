@@ -170,6 +170,12 @@ const prog_uint32_t song1[] PROGMEM = {
     start1 + bpm1_dt * 117.5, 2,
     start1 + bpm1_dt * 118, 1,
     start1 + bpm1_dt * 119, 2,
-    start1 + bpm1_dt * 119, 3,
-    start1 + bpm1_dt * 119, 4
+    start1 + bpm1_dt * 120, 3,
+    start1 + bpm1_dt * 121, 4,
+    start1 + bpm1_dt * 122, 4,
+    start1 + bpm1_dt * 123, 4,
+    start1 + bpm1_dt * 124, 4,
+    start1 + bpm1_dt * 125, 4,
+    start1 + bpm1_dt * 126, 4,
+    
 };
