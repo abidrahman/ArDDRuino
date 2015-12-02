@@ -215,6 +215,7 @@ void initialization() {
 // MENU STATE
 
 void loadMenuState() {
+    tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
     tft.setCursor(5, 50);
     tft.setTextColor(0x780F);
     tft.setTextSize(2);
@@ -464,9 +465,9 @@ void loadScoreState() {
     tft.print(Score);
     tft.setCursor(5, 70);
     tft.setTextColor(0xFFFF);
-    tft.setTextSize(0.5);
+    tft.setTextSize(0.3);
     tft.print("You hit   % of the notes!");
-    tft.setCursor(45, 70);
+    tft.setCursor(50, 70);
     tft.print((notesHit/totalNotes)*100);
     tft.setCursor(8, 100);
     tft.setTextColor(0xFD20);
