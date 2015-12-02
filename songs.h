@@ -4,7 +4,7 @@ const unsigned long mil = 1000000;
 const int bpm1 = 110; // beats per minute of song
 const unsigned long start1 = 4.386*mil; //first even in song
 const unsigned long bpm1_dt = 60.0 / 110.0 * mil; // time inbetween beats in microseconds
-const unsigned long song1_length = start1 + bpm1_dt * 120;
+const unsigned long song1_length = start1 + bpm1_dt * 118;
 const unsigned long song1_end = start1 + bpm1_dt * 130;
 
 const prog_uint32_t song1[] PROGMEM = {
@@ -169,7 +169,5 @@ const prog_uint32_t song1[] PROGMEM = {
     start1 + bpm1_dt * 117, 3,
     start1 + bpm1_dt * 117.5, 2,
     start1 + bpm1_dt * 118, 1,
-    start1 + bpm1_dt * 119, 2,
-    start1 + bpm1_dt * 119, 3,
-    start1 + bpm1_dt * 119, 4
+    start1 + bpm1_dt * 119, 2
 };
