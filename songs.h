@@ -59,17 +59,17 @@ const prog_uint32_t song1[] PROGMEM = {
 	start1 + bpm1_dt * 45.5, 2,
 	start1 + bpm1_dt * 45.5, 3,
 	start1 + bpm1_dt * 46.5, 3,
-	start1 + bpm1_dt * 46.5, 4
+	start1 + bpm1_dt * 46.5, 4,
     start1 + bpm1_dt * 48.5, 1,
     start1 + bpm1_dt * 49, 3,
     start1 + bpm1_dt * 49.5, 3,
-    start1 + bpm1_dt * 50, 3
+    start1 + bpm1_dt * 50, 3,
     start1 + bpm1_dt * 50.5, 3,
     start1 + bpm1_dt * 51, 4,
     start1 + bpm1_dt * 51.5, 3,
     start1 + bpm1_dt * 52.5, 3,
     start1 + bpm1_dt * 53, 2,
-    start1 + bpm1_dt * 53.5, 1
+    start1 + bpm1_dt * 53.5, 1,
     start1 + bpm1_dt * 53.5, 2,
     start1 + bpm1_dt * 55.5, 1,
     start1 + bpm1_dt * 56, 4,
