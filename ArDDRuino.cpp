@@ -72,6 +72,7 @@ void loadMenuState();
 void loadScoreState();
 void runMenuState();
 void updateScore();
+void updateMultiplier();
 void updateBars();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
@@ -141,6 +142,7 @@ int main() {
             shouldExitState = false;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
+                shouldExitState = false;
                 counter = 0;
                 state = PLAYSTATE;
             }
@@ -152,9 +154,8 @@ int main() {
             renderPlayState();
             ++counter;
             game_time += dt;
-            shouldExitState = false;
-            if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState && game_time > 10000000) {
+            shouldExitState = false;
                 counter = 0;
                 state = SCORESTATE;
             }
@@ -165,11 +166,10 @@ int main() {
             ++counter;
             updateScoreState(dt);
             renderScoreState();
-            shouldExitState = false;
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
                 counter = 0;
-                state = SCORESTATE;
+                state = MENUSTATE;
             }
         }
     }
@@ -209,8 +209,6 @@ void initialization() {
     // clear to black
     tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
 
-    //audio.speakerPin = 11;
-    //audio.play("hello.wav");
 }
 
 
@@ -272,11 +270,13 @@ NoteSprite Circles[NUMCIRCLES];
 
 const int TAPZONE_ABOVE = 140;
 const int TAPZONE_BELOW = 155;
+const int totalNotes = 164;
 int Score;
 int conScore;
 int multiplier;
 int oldMultiplier;
 int barColor;
+int notesHit;
 
 unsigned long nextEventTime;
 int eventIndex;
@@ -297,15 +297,23 @@ void loadPlayState() {
         tft.fillRect(i*25 - 5,0,11,160,barColor);
     }
     
+    game_time = 0;
     nextEventTime = 0;
     eventIndex = 0;
     nextEventTime = pgm_read_dword(&song1[eventIndex]);
     
     Score = 0;
     conScore = 0;
+    notesHit = 0;
     int multiplier;
     int oldMultiplier;
     updateScore();
+    
+    tft.setCursor(2, 5);
+    tft.setTextColor(0xFFFF);
+    tft.setTextSize(1);
+    tft.print("x");
+    updateMultiplier();
     
     playSong("Numb.wav");
 }
@@ -315,9 +323,17 @@ int note;
 void updatePlayState(unsigned long dt) {
     //Serial.print("game time"); Serial.println(game_time);
     //Serial.print("next event time"); Serial.println(nextEventTime);
-    
+
     if (game_time > nextEventTime) {
         newEvent = true;
+        if (game_time > song1_length) {
+            if (game_time > song1_end) {
+                shouldExitState = true;
+            }
+            else {
+                newEvent = false;
+            }
+        }
     }
     
     if (newEvent) { 
@@ -354,36 +370,41 @@ void updatePlayState(unsigned long dt) {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
+            // Update bars so that circle doesn't drag
             tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS + 1, barColor);
             Circles[i].update(dt);
+            // Make circle once it hits the bottom
             if (Circles[i].getY() > (170 + Circles[i].RADIUS)) {
                 Circles[i].onScreen = false;
             }
+            // Check for button taps on circles within the lines
             if (Circles[i].getY() > TAPZONE_ABOVE && Circles[i].getY() < TAPZONE_BELOW && Buttons[Circles[i].note -1].pushed == true) {
                 Circles[i].onScreen = false;
                 tft.fillCircle(Circles[i].getX(), Circles[i].getY(), Circles[i].RADIUS + 2, barColor);
-                tft.fillRect(110,5,10,10,0x00);
-                Score++;
+                tft.fillRect(108,5,20,10,0x00);
+                Score = Score + (multiplier + 1);
+                notesHit++;
                 conScore++;
-                multiplier = conScore / 5;
                 updateScore();
                 
             }   
+            // Set multiplier to ZERO if a circle is missed
             if (Circles[i].getY() > TAPZONE_BELOW) {     
                 conScore = 0;
             }
+        }
+        multiplier = conScore / 7;
+        if (multiplier > 4) {
+            multiplier = 4;
         }
     }
     
     if (oldMultiplier != multiplier) {
         updateBars();
         oldMultiplier = multiplier;
+        tft.fillRect(10,5,10,10,0x00);
+        updateMultiplier();
     }
-
-        
-    
-//    Serial.print("dt: "); Serial.println(dt);
-//    Serial.print("y: "); Serial.println(Circles[0].getY());
     
 }
 
@@ -391,10 +412,10 @@ void updateBars() {
     
     if (multiplier == 0) {
        barColor = 0xFFFF;
-    } else if (multiplier == 1) { barColor = 0xFFCCCC;
-    } else if (multiplier == 2) { barColor = 0xFF8080;
-    } else if (multiplier == 3) { barColor = 0xFF4D4D;
-    } else if (multiplier == 4) { barColor = 0xFF0000;
+    } else if (multiplier == 1) { barColor = color(0,255,0);
+    } else if (multiplier == 2) { barColor = color(102, 255, 255);
+    } else if (multiplier == 3) { barColor = color(255, 255, 102);
+    } else if (multiplier == 4) { barColor = color(255, 204, 255);
     }
     for (int i = 1; i < BARS + 1; ++i) {
         tft.fillRect(i*25 - 5,0,11,160,barColor);
@@ -413,10 +434,17 @@ void renderPlayState() {
 
 void updateScore() {
     //Display score on screen.
-    tft.setCursor(110, 5);
+    tft.setCursor(108, 5);
     tft.setTextColor(0xFFFF);
     tft.setTextSize(1);
     tft.print(Score);
+}
+
+void updateMultiplier() {
+    tft.setCursor(10, 5);
+    tft.setTextColor(0xFFFF);
+    tft.setTextSize(1);
+    tft.print(multiplier+1);
 }
 
 void playSong(char *songName) {
@@ -434,7 +462,13 @@ void loadScoreState() {
     tft.print("Score: ");
     tft.setCursor(90, 50);
     tft.print(Score);
-    tft.setCursor(8, 70);
+    tft.setCursor(5, 70);
+    tft.setTextColor(0xFFFF);
+    tft.setTextSize(0.5);
+    tft.print("You hit   % of the notes!");
+    tft.setCursor(45, 70);
+    tft.print((notesHit/totalNotes)*100);
+    tft.setCursor(8, 100);
     tft.setTextColor(0xFD20);
     tft.setTextSize(0.6);
     tft.print("Click to try again!");
