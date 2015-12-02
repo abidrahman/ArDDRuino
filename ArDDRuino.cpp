@@ -76,8 +76,6 @@ void updateMultiplier();
 void updateBars();
 void updatePlayState(unsigned long dt);
 void renderPlayState();
-void updateScoreState(unsigned long dt);
-void renderScoreState();
 void playSong(char *songName);
 
 uint16_t color(int red, int green, int blue);
@@ -103,7 +101,6 @@ int main() {
 
     cursor.x = 64;
     cursor.y = 80;
-
     unsigned long dt;
     unsigned long counter = 0;
 
@@ -162,8 +159,6 @@ int main() {
         if (state == SCORESTATE) {
             if (counter == 0) loadScoreState();
             ++counter;
-            updateScoreState(dt);
-            renderScoreState();
             if (joystick.pushed == true && joystick.pushcount > 0) shouldExitState = true;
             if (shouldExitState) {
                 counter = 0;
@@ -215,7 +210,7 @@ void initialization() {
 void loadMenuState() {
     tft.fillScreen(tft.Color565(0x00, 0x00, 0x00));
     tft.setCursor(5, 50);
-    tft.setTextColor(0x780F);
+    tft.setTextColor(color(246,71,71));
     tft.setTextSize(2);
     tft.print("ArDDRuino!");
     tft.setCursor(20, 70);
@@ -246,7 +241,7 @@ void animateBalls() {
         tft.fillCircle(balls[i].x, balls[i].y, 1, 0x0);
         balls[i].x = 7 * i;
         balls[i].y = getBallY(i, frame);
-        tft.fillCircle(balls[i].x, balls[i].y, 1, 0x03EF);
+        tft.fillCircle(balls[i].x, balls[i].y, 1, color(34,167,240));
 
     }
     frame += 3;
@@ -269,7 +264,7 @@ NoteSprite Circles[NUMCIRCLES];
 
 const int TAPZONE_ABOVE = 140;
 const int TAPZONE_BELOW = 155;
-const int totalNotes = 164;
+const int totalNotes = 160;
 int Score;
 int conScore;
 int multiplier;
@@ -280,8 +275,6 @@ int notesHit;
 unsigned long nextEventTime;
 int eventIndex;
 boolean newEvent;
-
-
 
 void loadPlayState() {
 
@@ -320,13 +313,11 @@ void loadPlayState() {
 
 int note;
 void updatePlayState(unsigned long dt) {
-    //Serial.print("game time"); Serial.println(game_time);
-    //Serial.print("next event time"); Serial.println(nextEventTime);
 
-    if (game_time > nextEventTime) {
+    if (game_time >= nextEventTime) {
         newEvent = true;
-        if (game_time > song1_length) {
-            if (game_time > song1_end) {
+        if (game_time >= song1_length) {
+            if (game_time >= song1_end) {
                 shouldExitState = true;
             }
             else {
@@ -338,6 +329,7 @@ void updatePlayState(unsigned long dt) {
     if (newEvent) { 
         
         unsigned long eventTime = nextEventTime;
+        if (eventTime >= song1_length) return;
         newEvent = false;
         while (pgm_read_dword(&song1[eventIndex]) == eventTime) {
             Serial.print("event time: "); Serial.println(nextEventTime);
@@ -372,6 +364,7 @@ void updatePlayState(unsigned long dt) {
 
     for (int i = 0; i < NUMCIRCLES; ++i) {
         if (Circles[i].onScreen == true) {
+        
             // Update bars so that circle doesn't drag
             tft.fillCircle(Circles[i].getX(), Circles[i].getY() - 5, Circles[i].RADIUS + 1, barColor);
             Circles[i].update(dt);
@@ -458,18 +451,24 @@ void playSong(char *songName) {
 
 void loadScoreState() {
     tft.fillScreen(tft.Color565(0x00,0x00,0x00));
-    tft.setCursor(17, 50);
-    tft.setTextColor(0x780F);
+    tft.setCursor(14, 50);
+    tft.setTextColor(color(246,71,71));
     tft.setTextSize(2);
     tft.print("Score: ");
-    tft.setCursor(90, 50);
+    tft.setCursor(86, 50);
     tft.print(Score);
-    tft.setCursor(35, 70);
+    
+    // Store score in EEPROM
+    int addr = 0;
+    EEPROM.read(addr);
+    
+    
+    tft.setCursor(33, 70);
     tft.setTextColor(0xFFFF);
     tft.setTextSize(0.3);
     char text[50];
     int a = (int) (((float)notesHit / (float)totalNotes) * 100.0);
-    sprintf(text, "You hit %i%", a);
+    sprintf(text, "You hit %i%%", a);
     tft.print(text);
     tft.setCursor(28,80);
     tft.print("of the notes!");
@@ -477,14 +476,6 @@ void loadScoreState() {
     tft.setTextColor(0xFD20);
     tft.setTextSize(0.6);
     tft.print("Click to try again!");
-}
-
-void updateScoreState(unsigned long dt) {
-
-}
-
-void renderScoreState() {
-
 }
 
 uint16_t color(int red, int green, int blue) {
