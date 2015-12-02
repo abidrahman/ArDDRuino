@@ -130,8 +130,6 @@ int main() {
         dt = currentTime - time;
         time = currentTime;
 
-        Serial.println(shouldExitState);
-        Serial.println(state);
         
         // STATES
         
@@ -154,8 +152,8 @@ int main() {
             renderPlayState();
             ++counter;
             game_time += dt;
-            if (shouldExitState && game_time > 10000000) {
-            shouldExitState = false;
+            if (shouldExitState && game_time > 20000000) {
+                shouldExitState = false;
                 counter = 0;
                 state = SCORESTATE;
             }
@@ -338,11 +336,14 @@ void updatePlayState(unsigned long dt) {
     }
     
     if (newEvent) { 
-        //Serial.println("new event");
+        
         unsigned long eventTime = nextEventTime;
         newEvent = false;
         while (pgm_read_dword(&song1[eventIndex]) == eventTime) {
+            Serial.print("event time: "); Serial.println(nextEventTime);
+            Serial.print("event index: "); Serial.println(eventIndex);
             note = pgm_read_dword(&song1[eventIndex+1]);
+            Serial.print("note: "); Serial.println(note);
             eventIndex += 2;
             nextEventTime = pgm_read_dword(&song1[eventIndex]);
             for (int i = 0; i < NUMCIRCLES; ++i) {
@@ -463,12 +464,15 @@ void loadScoreState() {
     tft.print("Score: ");
     tft.setCursor(90, 50);
     tft.print(Score);
-    tft.setCursor(5, 70);
+    tft.setCursor(35, 70);
     tft.setTextColor(0xFFFF);
     tft.setTextSize(0.3);
-    tft.print("You hit   % of the notes!");
-    tft.setCursor(50, 70);
-    tft.print((notesHit/totalNotes)*100);
+    char text[50];
+    int a = (int) (((float)notesHit / (float)totalNotes) * 100.0);
+    sprintf(text, "You hit %i%", a);
+    tft.print(text);
+    tft.setCursor(28,80);
+    tft.print("of the notes!");
     tft.setCursor(8, 100);
     tft.setTextColor(0xFD20);
     tft.setTextSize(0.6);
