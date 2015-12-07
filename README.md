@@ -13,7 +13,7 @@ Second Arduino runs in code in the ~/audioslave folder. To play music, you
 must connect a speaker to the 2nd Arduino. However, the main program
 will work without a 2nd connected Arduino.
 
-__Wiring Instructions for Arduino 1__
+__Wiring Instructions for Arduino 1__  
 __Wiring Instructions for Arduino 2__
 
 ## File Organization
