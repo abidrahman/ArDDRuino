@@ -290,10 +290,11 @@ void loadPlayState() {
 int note;
 void runPlayState(unsigned long dt) {
 
-    //Exits state when song is over.
+    // Checks the time of the next event.
     if (game_time >= nextEventTime) {
         newEvent = true;
-        if (game_time >= song1_length) {
+        if (game_time >= song1_length) { 
+			// If time is past the song length, exit the state
             if (game_time >= song1_end) {
                 shouldExitState = true;
             }
@@ -303,19 +304,24 @@ void runPlayState(unsigned long dt) {
         }
     }
     
-    //Creates the circles and associates it with a note.
+    // Retrieves the note pattern and associates notes with sprites.
     if (newEvent) { 
         
         unsigned long eventTime = nextEventTime;
         if (eventTime >= song1_length) return;
         newEvent = false;
+		// Loop through all events at the specified event time
         while (pgm_read_dword(&song1[eventIndex]) == eventTime) {
-            Serial.print("event time: "); Serial.println(nextEventTime);
-            Serial.print("event index: "); Serial.println(eventIndex);
+
+			// find the note corresponding to the event
+			// "note" is the column that a circle should be rendered in 
             note = pgm_read_dword(&song1[eventIndex+1]);
-            Serial.print("note: "); Serial.println(note);
+
+			// increment the index to retrieve the next event
             eventIndex += 2;
             nextEventTime = pgm_read_dword(&song1[eventIndex]);
+
+			// finds the first off-screen circle, sets its note, and puts it on screen
             for (int i = 0; i < NUMCIRCLES; ++i) {
                 if (Circles[i].onScreen == false) {
                     Circles[i].note = note;
