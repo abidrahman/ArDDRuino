@@ -20,6 +20,7 @@ __ARDUINO 1__
 - NoteSprite.cpp/h: class for storing information of a falling note object
 - songs.h: file for storing song data in an array. Uses PROGMEM flag to store
 		  data in Arduino flash memory (to conserve RAM)  
+
 __ARDUINO 2__
 - AudioSlave.cpp: program for playback of music from SD card using the
 				  TMRpcm audio library.
@@ -27,6 +28,6 @@ __ARDUINO 2__
 
 ## How It Works
 
-__States__
+__States__  
 The program is organized by states: MenuState, PlayState, and ScoreState.
 
