@@ -14,7 +14,59 @@ must connect a speaker to the 2nd Arduino. However, the main program
 will work without a 2nd connected Arduino.
 
 __Wiring Instructions for Arduino 1__  
+
+Screen:
+- GND to BB GND bus
+- VCC to BB positive bus
+- RESET to Pin 8
+- D/C (Data/Command) to Pin 7
+- CARD_CS (Card Chip Select) to Pin 5
+- TFT_CS (TFT/screen Chip Select) to Pin 6
+- MOSI (Master Out Slave In) to Pin 51
+- SCK (Clock) to Pin 52
+- MISO (Master In Slave Out) to 50
+- LITE (Backlite) to BB positive bus
+
+Joystick:
+- VCC to BB positive bus
+- VERT to Pin A0
+- HOR to Pin A1
+- SEL to Pin 9
+- GND to BB GND bus
+
+Buttons:
+- Pin 31 <-> Resistor <-> BB GND bus <-> Button 1 <-> BB +ve bus
+- Pin 33 <-> Resistor <-> BB GND bus <-> Button 1 <-> BB +ve bus
+- Pin 35 <-> Resistor <-> BB GND bus <-> Button 1 <-> BB +ve bus
+- Pin 37 <-> Resistor <-> BB GND bus <-> Button 1 <-> BB +ve bus
+
+Communication:
+- Arduino 1 TX3 to Arduino 2 RX3
+
+Other:
+- BB positive bus to 5V on Arduino
+- BB GND bus to GND on Arduino
+
 __Wiring Instructions for Arduino 2__
+Screen:
+- GND to BB GND bus
+- VCC to BB positive bus
+- RESET to Pin 8
+- D/C (Data/Command) to Pin 7
+- CARD_CS (Card Chip Select) to Pin 5
+- TFT_CS (TFT/screen Chip Select) to Pin 6
+- MOSI (Master Out Slave In) to Pin 51
+- SCK (Clock) to Pin 52
+- MISO (Master In Slave Out) to 50
+- LITE (Backlite) to BB positive bus
+
+Communication:
+- Arduino 2 TX3 to Arduino 1 RX3
+
+Other:
+- BB positive bus to 5V on Arduino
+- BB GND bus to GND on Arduino
+
 
 ## File Organization
 __ARDUINO 1__
