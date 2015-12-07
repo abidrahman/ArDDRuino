@@ -30,7 +30,7 @@ __ARDUINO 2__
 
 ## How It Works
 
-## States
+#### States
 The program is organized by states: MenuState, PlayState, and ScoreState.
 The main program runs a while(true) loop, and the control is passed to the
 state that the program is currently in.
@@ -66,4 +66,19 @@ consecutively, and a score counter.
 __ScoreState__  
 The player's score and hit percentage is displayed.
 
+#### Song Data (songs.h)  
+The song data is stored in an array in the Arduino's flash memory using
+the PROGMEM flag. The reason is that a long song would require a large 
+amount of storage, and the Arduino RAM is very limited. The data is stored 
+as events: pairs of numbers. The first number stores the time of the event 
+in microseconds. This is calculated according to the rhythm of the song. 
+The second number is the note, or the column that the sprite should be rendered in.
 
+#### AudioSlave  
+When the main program loads PlayState, a message will be send to the 2nd
+Arduino over serial communication. Then, the song will begin playing. The 
+audio playback is done by the TMRpcm library, which uses timer interrupts
+to play wav audio from the SD card. Music playback requires an analog speaker
+to be hooked up to pin 11. This can be done easily with some headphones 
+by connecting the right/left channels to pin 11 and the ground channel to
+the Arduino's ground.
