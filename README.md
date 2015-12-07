@@ -48,6 +48,7 @@ Other:
 - BB GND bus to GND on Arduino
 
 __Wiring Instructions for Arduino 2__
+
 Screen:
 - GND to BB GND bus
 - VCC to BB positive bus
